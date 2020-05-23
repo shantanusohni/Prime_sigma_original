@@ -1,10 +1,10 @@
 pipeline {
     agent any
     environment {
-        PROJECT_ID = 'skilled-display-260316'
-        CLUSTER_NAME = 'kube-cluster'
-        LOCATION = 'us-central1-c'
-        CREDENTIALS_ID = 'skilled-display-260316'
+        PROJECT_ID = 'fresh-shell-275710'
+        CLUSTER_NAME = 'jaimatadi'
+        LOCATION = 'us-central1-a'
+        CREDENTIALS_ID = 'gke'
     }
     stages {
         stage("Checkout code") {
@@ -15,7 +15,7 @@ pipeline {
         stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("cooldsachin/sigma-react:${env.BUILD_ID}")
+                    myapp = docker.build("shantanusohni/reactjs:${env.BUILD_ID}")
                 }
             }
         }
@@ -31,8 +31,9 @@ pipeline {
         }        
         stage('Deploy to GKE Cluster') {
             steps{
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'app-deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])                
-                
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'app-deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'kubectl apply -f app-deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'kubectl rollout restart deployment.apps/voting-app-deployment', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
     }    
