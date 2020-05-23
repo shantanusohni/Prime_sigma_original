@@ -1,2 +1,1 @@
-# Prime_sigma_original
-Prime_sigma_original
+# PrimeSigma
