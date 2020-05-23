@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: voting-app1
-        image: shantanusohni/react-ui:latest
+        image: shantanusohni/react-ui
         imagePullPolicy: Always
         ports:
         - containerPort: 80
